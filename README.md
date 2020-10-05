@@ -20,3 +20,14 @@ O websocket está disponível através da URL: ws://localhost:54985/ws.
  - Mensagem privada para um usuário
  
 Para acessar a ajuda nos comandos que podem ser utilizados no Chat (Frontend), basta clicar no botão "Ajuda" no canto superior direito da tela.
+
+# Teste
+Foi implementado um simples teste de funcionalidade fim-a-fim, através de um mero código Javascript (TestUtils.js) para orquestrar e tratar as chamadas aos métodos da classe ChatService.js.
+
+O teste foi montado no arquivo \ChatClient\wwwroot\js\TestCase.js e aborda a conexão e troca de 3 usuários em uma sala, sendo o terceiro usuário com um apelido igual ao primeiro e seu login deve ser rejeitado.
+
+Para executar o caso de teste:
+ 1. Execute a aplicação
+ 2. Abra o navegador da internet (utilizamos Google Chrome neste exemplo) e abra o console do desenvolvedor (F12)
+ 3. Acesse a rota http://localhost:54972/Test
+ 4. Verifique a execução dos passos através do Log
