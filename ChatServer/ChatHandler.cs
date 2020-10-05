@@ -1,6 +1,5 @@
 ﻿using ChatServe.Models;
 using ChatServer.Services;
-using System.Diagnostics.Eventing.Reader;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,16 +9,24 @@ namespace ChatServer
 {
     public class ChatHandler : WebSocketHandler
     {
-        public ChatHandler(UserService service) : base(service)
-        {
-        }
+        //Recebe por injeção a instância do UserService
+        public ChatHandler(UserService service) : base(service){ }
 
+        /// <summary>
+        /// Listenner para receber novas conexões
+        /// </summary>
+        /// <param name="socket"></param>
+        /// <returns></returns>
         public override async Task OnConnected(WebSocket socket)
         {
             await base.OnConnected(socket);
-
-            var socketId = Service.Get(socket).Id;
         }
+
+        /// <summary>
+        /// Listener para desconxão
+        /// </summary>
+        /// <param name="socket"></param>
+        /// <returns></returns>
         public override async Task OnDisconnected(WebSocket socket)
         {
             var user = Service.Get(socket);
@@ -27,11 +34,22 @@ namespace ChatServer
             await base.OnDisconnected(socket);
         }
 
+        /// <summary>
+        /// Listener para receber mensagens de um client
+        /// </summary>
+        /// <param name="socket"></param>
+        /// <param name="result"></param>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
         public override async Task ReceiveAsync(WebSocket socket, WebSocketReceiveResult result, byte[] buffer)
         {
+            //Obter o usuário do socket
             var user = Service.Get(socket);
+
+            //Parse da mensagem para identificar o comando e o conteúdo
             var message = new Message(Encoding.UTF8.GetString(buffer, 0, result.Count));
 
+            //Tratar a ação com base no comando. Consultar class Message para obter a lista de comandos
             switch (message.Command)
             {
                 case Message.Login:

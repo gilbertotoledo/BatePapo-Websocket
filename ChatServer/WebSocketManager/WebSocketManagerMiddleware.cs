@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace WebSocketManager
 {
+    /// <summary>
+    /// Middleware para interceptar a comunicação com o websocket e abstrair alguns padrões de comunicação.
+    /// </summary>
     public class WebSocketManagerMiddleware
     {
         private readonly RequestDelegate _next;

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.WebSockets;
-using System.Threading.Tasks;
 
 namespace ChatServer.Models
 {
@@ -13,6 +10,10 @@ namespace ChatServer.Models
         public bool Logged { get; set; } = false;
         public WebSocket Websocket { get; set; }
 
+        /// <summary>
+        /// Configure a GUID to Id
+        /// </summary>
+        /// <param name="websocket"></param>
         public User(WebSocket websocket)
         {
             Id = Guid.NewGuid().ToString();
@@ -20,6 +21,10 @@ namespace ChatServer.Models
             Websocket = websocket;
         }
 
+        /// <summary>
+        /// Set a nickname to user and set user as logged
+        /// </summary>
+        /// <param name="nickname"></param>
         public void Login(string nickname)
         {
             this.Nickname = nickname;

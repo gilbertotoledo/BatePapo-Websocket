@@ -1,7 +1,13 @@
-﻿class ChatService {
+﻿/*
+ * ChatService
+ * Classe de comunicação com o Websocket
+*/
+class ChatService {
+    //URL do websocket
     uri = "ws://localhost:54985/ws";
     socket = null;
 
+    //default
     options = {
         username: null,
         onOpen: (event) => { },
@@ -67,10 +73,12 @@
         };
     }
 
+    //envia um comando para o WS
     sendCommand(command, message) {
         this.socket.send(command + " " + message);
     }
 
+    //Envia uma mensagem
     sendMessage(message) {
         if (message.indexOf("/p") != -1) {//private
             this.socket.send(ChatService.commands.messagePrivate + " " + message.replace("/p ",""));
@@ -79,6 +87,7 @@
         }
     }
 
+    //Faz o parse de uma mensagem
     parse(text) {
         return {
             command: text.substr(0, text.indexOf(" ")),

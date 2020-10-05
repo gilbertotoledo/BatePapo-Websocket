@@ -1,17 +1,19 @@
-﻿var chatService = null;
+﻿/* Métodos para manipulação da view
+ * Há apenas uma instância de CHatService
+ */
+
+var chatService = null;
 
 var messageList = document.getElementById("messages");
-
 var connectButton = document.getElementById("connectButton");
 var sendButton = document.getElementById("sendButton");
-
 var textName = document.getElementById("textName");
 var helpName = document.getElementById("helpName");
 
 connectButton.addEventListener("click", () => {
     if (connectButton.innerText == "Entrar")
         connect();
-    else
+    else//Sair
         disconnect();
 
     connectButton.disabled = "disabled";
@@ -36,6 +38,7 @@ textMessage.addEventListener("keyup", function (event) {
     }
 });
 
+//Abre uma conexão com o Websocket e configura os listeners
 function connect() {
     var options = {
         username: textName.value,
@@ -52,6 +55,8 @@ function connect() {
             textName.disabled = '';
             connectButton.innerHTML = "Entrar";
             connectButton.disabled = "";
+            textMessage.disabled = "disabled";
+            sendButton.disabled = "disabled";
 
             appendMessage("Você saiu da sala #geral.", ["text-danger", "font-weight-bold"]);
         },
@@ -61,27 +66,34 @@ function connect() {
             switch (message.command) {
 
                 case ChatService.commands.loginError:
-                    helpName.innerHTML = message.content;
-                    helpName.style = "display:block";
                     textName.disabled = '';
                     connectButton.innerHTML = "Entrar";
                     connectButton.disabled = "";
+                    textMessage.disabled = "disabled";
+                    sendButton.disabled = "disabled";
 
+                    helpName.innerHTML = message.content;
+                    helpName.style = "display:block";
                     break;
+
                 case ChatService.commands.enteredRoom:
                     appendMessage(message.content, ["text-success", "font-weight-bold"]);
                     helpName.innerHTML = "";
                     helpName.style = "display:none";
                     break;
+
                 case ChatService.commands.exitedRoom:
                     appendMessage(message.content, ["text-warning", "font-weight-bold"]);
                     break;
+
                 case ChatService.commands.receiveMessage:
                     appendMessage(message.content);
                     break;
+
                 case ChatService.commands.receiveMessagePrivate:
                     appendMessage(message.content, ["text-primary", "font-weight-bold"]);
                     break;
+
                 case ChatService.commands.mentionError:
                     appendMessage(message.content, ["text-danger"]);
                     break;
@@ -92,11 +104,13 @@ function connect() {
     chatService.connect();
 }
 
+//Fecha a conexão com o Websocket
 function disconnect() {
     if (chatService != undefined)
         chatService.disconnect();
 }
 
+//Adiciona uma mensagem à lista de mensagens
 function appendMessage(message,style=[]) {
     var item = document.createElement("p");
     item.classList.add("mb-0");

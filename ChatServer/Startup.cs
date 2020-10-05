@@ -14,20 +14,19 @@ namespace ChatServe
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //Configuração da Injeção de dependência para o UserService
             services.AddWebSocketManager();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //Configuração da Injeção de dependências
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
 
-            //Enable websockets on application
+            //Ativa o uso de websockets e configura a rota /ws
             app.UseWebSockets();
             app.MapWebSocketManager("/ws", serviceProvider.GetService<ChatHandler>());
 

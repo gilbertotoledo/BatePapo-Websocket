@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace WebSocketManager
 {
+    /// <summary>
+    /// Contém as interfaces necessárias para injeção de dependência do UserService e do Websocket
+    /// </summary>
     public static class WebSocketManagerExtensions
     {
         public static IServiceCollection AddWebSocketManager(this IServiceCollection services)
