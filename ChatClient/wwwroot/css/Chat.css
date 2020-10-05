@@ -1,0 +1,47 @@
+﻿body {
+    background-color: #f2f2f2;
+}
+
+#box-chat {
+    margin-top: 30px;
+    background-color: #fafafa;
+    border-radius: 10px;
+    box-shadow: 7px 7px 20px -9px rgba(0,0,0,0.52);
+}
+
+#col-rooms {
+    background-color: #f1f1f1;
+}
+
+#col-rooms .list-group-item {
+    padding: 5px 10px;
+}
+
+#col-rooms .list-group-item:hover {
+    cursor:pointer;
+}
+
+#rooms {
+    height: 376px;
+    width: 100%;
+}
+
+#create-room {
+    height: 30px;
+}
+
+#col-messages {
+}
+
+#messages {
+    height: 400px;
+    width: 100%;
+}
+
+#input-message {
+    height: 30px;
+}
+
+    #input-message input {
+        width: 100%;
+    }
