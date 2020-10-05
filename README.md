@@ -1,4 +1,4 @@
-# Take-TesteTecnico
+# BatePapo com Websocket em Aspnet Core
 
 Este projeto consiste em um serviço de Bate Papo, contendo uma solução composta de 2 projetos: ChatServer e ChatClient (ambos em AspNetCore 3.1).
 Não foram utilizadas bibliotecas externas, como SignalR. Apenas as bibliotecas base do AspNet foram utilizadas.
