@@ -1,5 +1,6 @@
 ﻿using ChatServe.Models;
 using ChatServer.Services;
+using System.Diagnostics.Eventing.Reader;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,18 +35,36 @@ namespace ChatServer
             switch (message.Command)
             {
                 case Message.Login:
-                    Service.Login(user.Id, message.Content);
-                    await SendMessageToAllAsync($"{Message.EnteredRoom} {message.Content} entrou na sala #geral.");
+                    if(Service.Login(user.Id, message.Content))
+                    {
+                        await SendMessageToAllAsync($"{Message.EnteredRoom} {message.Content} entrou na sala #geral.");
+                    }
+                    else
+                    {
+                        await SendMessageToOneAsync($"{Message.LoginError} Nome de usuário já existe.", socket);
+                    }
                     break;
                 case Message.MessageToRoom:
-                    if(!string.IsNullOrEmpty(message.ToNickname))
-                        await SendMessageToAllAsync($"{Message.ReceiveMessage} {user.Nickname} diz para {message.ToNickname}: {message.Content}");
+                    if (!string.IsNullOrEmpty(message.ToNickname))
+                    {
+                        var toUser = Service.Get(message.ToNickname);
+                        if (toUser == null)
+                        {
+                            await SendMessageToOneAsync($"{Message.MentionError} {message.ToNickname} não encontrado na sala.", socket);
+                        }
+                        else
+                        {
+                            await SendMessageToAllAsync($"{Message.ReceiveMessage} {user.Nickname} diz para {message.ToNickname}: {message.Content}");
+                        }
+                    }
                     else
+                    {
                         await SendMessageToAllAsync($"{Message.ReceiveMessage} {user.Nickname} diz: {message.Content}");
+                    }
                     break;
                 case Message.MessagePrivate:
-                    await SendMessageToOneAsync($"{Message.ReceiveMessage} {user.Nickname} diz para {message.ToNickname} (privado): {message.Content}", message.ToNickname);
-                    await SendMessageToOneAsync($"{Message.ReceiveMessage} {user.Nickname} diz para você (privado): {message.Content}",message.ToNickname);
+                    await SendMessageToOneAsync($"{Message.ReceiveMessagePrivate} {user.Nickname} diz para {message.ToNickname} (privado): {message.Content}", message.ToNickname);
+                    await SendMessageToOneAsync($"{Message.ReceiveMessagePrivate} {user.Nickname} diz para {message.ToNickname} (privado): {message.Content}", socket);
                     break;
             }
         }

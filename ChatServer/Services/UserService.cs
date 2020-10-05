@@ -36,9 +36,14 @@ namespace ChatServer.Services
             Users.Add(new User(socket));
         }
 
-        public void Login(string id, string nickname)
+        public bool Login(string id, string nickname)
         {
-            Users.FirstOrDefault(u => u.Id == id)?.Login(nickname);            
+            var userByNickname = Users.FirstOrDefault(u => u.Nickname == nickname);
+            if (userByNickname != null)
+                return false;
+            
+            Users.FirstOrDefault(u => u.Id == id)?.Login(nickname);
+            return true;
         }
 
         public async Task RemoveSocket(string id)

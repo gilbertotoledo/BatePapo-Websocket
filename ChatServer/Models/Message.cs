@@ -1,10 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ChatServe.Models
+﻿namespace ChatServe.Models
 {
     public class Message
     {
@@ -14,6 +8,11 @@ namespace ChatServe.Models
         public const string EnteredRoom = "/er";
         public const string ExitedRoom = "/xr";
         public const string ReceiveMessage = "/rm";
+        public const string ReceiveMessagePrivate = "/rmp";
+
+        //error
+        public const string LoginError = "/lerr";
+        public const string MentionError = "/merr";
 
         public string Command { get; set; }
         public string Content { get; set; }

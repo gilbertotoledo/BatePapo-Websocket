@@ -16,7 +16,10 @@
         messagePrivate: "/mp",
         enteredRoom: "/er",
         exitedRoom: "/xr",
-        receiveMessage: "/rm"
+        receiveMessage: "/rm",
+        receiveMessagePrivate: "/rmp",
+        loginError: "/lerr",
+        mentionError: "/merr"
     }
 
     constructor(options) {

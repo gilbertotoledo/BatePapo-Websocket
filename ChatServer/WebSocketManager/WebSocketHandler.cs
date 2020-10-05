@@ -30,10 +30,10 @@ namespace WebSocketManager
         {
             if(socket.State != WebSocketState.Open)
                 return;
-
-            await socket.SendAsync(buffer: new ArraySegment<byte>(array: Encoding.UTF8.GetBytes(message),
+            var encoded = Encoding.UTF8.GetBytes(message);
+            await socket.SendAsync(buffer: new ArraySegment<byte>(array: encoded,
                                                                   offset: 0, 
-                                                                  count: message.Length),
+                                                                  count: encoded.Length),
                                    messageType: WebSocketMessageType.Text,
                                    endOfMessage: true,
                                    cancellationToken: CancellationToken.None);          
@@ -58,6 +58,12 @@ namespace WebSocketManager
             var user = Service.Get(nickname);
             if(user.Websocket.State == WebSocketState.Open && user.Logged)
                 await SendMessageAsync(user.Websocket, message);
+        }
+
+        public async Task SendMessageToOneAsync(string message, WebSocket socket)
+        {
+            if (socket.State == WebSocketState.Open)
+                await SendMessageAsync(socket, message);
         }
 
         public abstract Task ReceiveAsync(WebSocket socket, WebSocketReceiveResult result, byte[] buffer);
