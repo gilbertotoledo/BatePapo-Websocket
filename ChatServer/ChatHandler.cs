@@ -1,4 +1,4 @@
-﻿using ChatServe.Models;
+﻿using ChatServer.Models;
 using ChatServer.Services;
 using System.Net.WebSockets;
 using System.Text;
@@ -30,7 +30,10 @@ namespace ChatServer
         public override async Task OnDisconnected(WebSocket socket)
         {
             var user = Service.Get(socket);
-            await SendMessageToAllAsync($"{Message.ExitedRoom} {user.Nickname} saiu da sala.");
+            if (user.Logged)
+            {
+                await SendMessageToAllAsync($"{Message.ExitedRoom} {user.Nickname} saiu da sala.");
+            }
             await base.OnDisconnected(socket);
         }
 
@@ -49,6 +52,10 @@ namespace ChatServer
             //Parse da mensagem para identificar o comando e o conteúdo
             var message = new Message(Encoding.UTF8.GetString(buffer, 0, result.Count));
 
+            User toUser = null;
+            if (message.ToNickname != null)
+                toUser = Service.Get(message.ToNickname);
+
             //Tratar a ação com base no comando. Consultar class Message para obter a lista de comandos
             switch (message.Command)
             {
@@ -65,7 +72,6 @@ namespace ChatServer
                 case Message.MessageToRoom:
                     if (!string.IsNullOrEmpty(message.ToNickname))
                     {
-                        var toUser = Service.Get(message.ToNickname);
                         if (toUser == null)
                         {
                             await SendMessageToOneAsync($"{Message.MentionError} {message.ToNickname} não encontrado na sala.", socket);
@@ -81,8 +87,15 @@ namespace ChatServer
                     }
                     break;
                 case Message.MessagePrivate:
-                    await SendMessageToOneAsync($"{Message.ReceiveMessagePrivate} {user.Nickname} diz para {message.ToNickname} (privado): {message.Content}", message.ToNickname);
-                    await SendMessageToOneAsync($"{Message.ReceiveMessagePrivate} {user.Nickname} diz para {message.ToNickname} (privado): {message.Content}", socket);
+                    if (toUser == null)
+                    {
+                        await SendMessageToOneAsync($"{Message.MentionError} {message.ToNickname} não encontrado na sala.", socket);
+                    }
+                    else
+                    {
+                        await SendMessageToOneAsync($"{Message.ReceiveMessagePrivate} {user.Nickname} diz para {message.ToNickname} (privado): {message.Content}", message.ToNickname);
+                        await SendMessageToOneAsync($"{Message.ReceiveMessagePrivate} {user.Nickname} diz para {message.ToNickname} (privado): {message.Content}", socket);
+                    }
                     break;
             }
         }

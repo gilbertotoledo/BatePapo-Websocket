@@ -61,7 +61,7 @@ function connect() {
             appendMessage("Você saiu da sala #geral.", ["text-danger", "font-weight-bold"]);
         },
         onMessage: (evt) => {
-            message = chatService.parse(evt.data);
+            message = ChatService.parse(evt.data);
 
             switch (message.command) {
 

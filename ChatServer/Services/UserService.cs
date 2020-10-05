@@ -32,7 +32,7 @@ namespace ChatServer.Services
         /// <returns></returns>
         public User Get(string nickname)
         {
-            return Users.FirstOrDefault(u => u.Nickname.ToLower() == nickname.ToLower());
+            return Users.Where(u => u.Nickname!=null && u.Nickname.ToLower() == nickname.ToLower())?.FirstOrDefault();
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace ChatServer.Services
         /// <returns></returns>
         public User Get(WebSocket socket)
         {
-            return Users.FirstOrDefault(u => u.Websocket == socket);
+            return Users.Where(u => u.Websocket == socket)?.FirstOrDefault();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace ChatServer.Services
         /// <returns></returns>
         public bool Login(string id, string nickname)
         {
-            var userByNickname = Users.Where(u => u.Nickname?.ToLower() == nickname.ToLower()).FirstOrDefault();
+            var userByNickname = Users.Where(u => u.Nickname!=null && u.Nickname?.ToLower() == nickname.ToLower()).FirstOrDefault();
             if (userByNickname != null)
                 return false;
 
@@ -86,7 +86,7 @@ namespace ChatServer.Services
         /// <returns></returns>
         public async Task RemoveSocket(string id)
         {
-            var user = Users.First(u => u.Id == id);
+            var user = Users.Where(u => u.Id == id).First();
             Users.Remove(user);
             await user.Websocket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
                                     statusDescription: "Closed by the Service",

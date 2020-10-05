@@ -1,8 +1,10 @@
-﻿/*
- * ChatService
- * Classe de comunicação com o Websocket
-*/
-class ChatService {
+﻿class ChatService {
+    /*
+    * ChatService
+    * Classe de comunicação com o Websocket
+    */
+
+
     //URL do websocket
     uri = "ws://localhost:54985/ws";
     socket = null;
@@ -43,7 +45,7 @@ class ChatService {
 
     configureListener() {
         this.socket.onopen = (event) => {
-            console.log("opened connection to " + this.uri);
+            //console.log("opened connection to " + this.uri);
             this.sendCommand(ChatService.commands.login, this.options.username);
 
             if (this.options.onOpen != undefined) {
@@ -52,14 +54,14 @@ class ChatService {
         };
 
         this.socket.onclose = (event) => {
-            console.log("closed connection from " + this.uri);
+            //console.log("closed connection from " + this.uri);
             if (this.options.onClose != undefined) {
                 this.options.onClose();
             }
         };
 
         this.socket.onmessage = (event) => {
-            console.log(event.data);
+            //console.log(event.data);
             if (this.options.onMessage != undefined) {
                 this.options.onMessage(event);
             }
@@ -88,7 +90,7 @@ class ChatService {
     }
 
     //Faz o parse de uma mensagem
-    parse(text) {
+    static parse(text) {
         return {
             command: text.substr(0, text.indexOf(" ")),
             content: text.substring(text.indexOf(" ") + 1)
